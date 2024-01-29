@@ -2,6 +2,8 @@ import { inject, injectable } from "tsyringe";
 import { IProduct } from "../../../domain/models/IProductModel";
 import { IProductRepository } from "../../../repositories/interfaces/IProductRepository";
 import { IGetProductByIdService } from "../../interfaces/product/IGetProductByIdService";
+import { ProductMapper } from "../../../adapters/mappers/ProductMapper";
+import { ProductDTO } from "../../../adapters/dtos/product/ProductDTO";
 
 @injectable()
 class GetProductByIdService implements IGetProductByIdService {
@@ -9,8 +11,9 @@ class GetProductByIdService implements IGetProductByIdService {
         @inject("ProductRepository") private productRepository: IProductRepository
     ) { }
 
-    execute(id: string): Promise<IProduct> {
-        return this.productRepository.getById(id);
+    async execute(id: string): Promise<ProductDTO> {
+        const product = await this.productRepository.getById(id);
+        return ProductMapper.mapperEntityToDTO(product);
     }
 }
 

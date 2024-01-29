@@ -3,6 +3,8 @@ import { EProductCategory } from "../../../domain/enums/EProductCategory";
 import { IProduct } from "../../../domain/models/IProductModel";
 import { IProductRepository } from "../../../repositories/interfaces/IProductRepository";
 import { IGetProductByCategoryService } from "../../interfaces/product/IGetProductByCategoryService";
+import { ProductMapper } from "../../../adapters/mappers/ProductMapper";
+import { ProductDTO } from "../../../adapters/dtos/product/ProductDTO";
 
 @injectable()
 class GetProductByCategoryService implements IGetProductByCategoryService {
@@ -10,8 +12,9 @@ class GetProductByCategoryService implements IGetProductByCategoryService {
         @inject("ProductRepository") private productRepository: IProductRepository
     ) { }
 
-    execute(category: EProductCategory): Promise<IProduct[]> {
-        return this.productRepository.getByCategory(category);
+    async execute(category: EProductCategory): Promise<ProductDTO[]> {
+        const products = this.productRepository.getByCategory(category);
+        return (await products).map(x => ProductMapper.mapperEntityToDTO(x))
     }
 }
 

@@ -3,17 +3,15 @@ import { EProductCategory } from "../enums/EProductCategory";
 import { IOrder } from "./IOrderModel";
 import { IPromotion } from "./IPromotionModel";
 
-interface IProduct {
+export interface IProduct {
   id?: string;
   name: string;
   value: number;
-  promotionValue: number;
+  promotionValue?: number;
   amount: number;
-  promotions: IPromotion[];
-  orders: IOrder[];
-  createdAt: Date;
-  updatedAt: Date;
+  promotions?: IPromotion[];
+  orders?: IOrder[];
+  createdAt?: Date;
+  updatedAt?: Date;
   category: EProductCategory;
 }
-
-export { IProduct }

@@ -1,5 +1,7 @@
 import { injectable, inject } from "tsyringe";
 import { IProduct } from "../../../domain/models/IProductModel";
+import { ProductMapper } from "../../../adapters/mappers/ProductMapper"
+import { CreateProductDTO } from "../../../adapters/dtos/product/CreateProductDTO";
 import { IProductRepository } from "../../../repositories/interfaces/IProductRepository";
 import { ICreateOrUpdateProductService } from "../../interfaces/product/ICreateOrUpdateProductService";
 
@@ -10,10 +12,11 @@ class CreateOrUpdateProductService implements ICreateOrUpdateProductService {
   ) { }
 
 
-  execute(product: IProduct): Promise<string> {
-    product.promotionValue = product.promotionValue ? product.promotionValue : null
-    product.createdAt = product.createdAt ? product.createdAt : new Date();
-    return this.productRepository.saveOrUpdate(product);
+  execute(product: CreateProductDTO): Promise<string> {
+    const productEntity = ProductMapper.mapperCreateProductDTOToEntity(product)
+    productEntity.promotionValue = productEntity.promotionValue ? productEntity.promotionValue : null
+    productEntity.createdAt = productEntity.createdAt ? productEntity.createdAt : new Date();
+    return this.productRepository.saveOrUpdate(productEntity);
   }
 }
 

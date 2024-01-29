@@ -1,7 +1,7 @@
-import { IProduct } from "../../../domain/models/IProductModel";
+import { CreateProductDTO } from "../../../adapters/dtos/product/CreateProductDTO";
 
 interface ICreateOrUpdateProductService {
-  execute(product: IProduct): Promise<string>;
+  execute(product: CreateProductDTO): Promise<string>;
 }
 
 export { ICreateOrUpdateProductService };
