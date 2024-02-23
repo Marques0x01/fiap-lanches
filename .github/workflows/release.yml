@@ -1,0 +1,225 @@
+# This is a basic workflow to help you get started with Actions
+
+name: CI
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the "main" branch
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+  
+env:
+  TF_ACTION_WORKING_DIR: "infra"
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+  workflow_dispatch:
+
+jobs:
+
+  fiap-lanches-testes:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      
+      - name: npm install
+        run: |
+          cd fiap-lanches-clean
+          cd app
+          npm install
+      
+      - name: npm run test
+        run: |
+          cd fiap-lanches-clean
+          cd app
+          npm run test
+  
+
+  docker-fiap-lanches:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@f95db51fddba0c2d1ec667646a06c2ce06100226 # v3.0.0
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: fiaplanches165
+          password: ${{secrets.DOCKER_HUB_TOKEN}}
+
+      - name: Build and push
+        uses: docker/build-push-action@v5
+        with:
+          context: ./fiap-lanches-clean/app
+          push: true
+          tags: fiaplanches165/fiaplanches:latest
+
+  helm-fiap-lanches:
+    permissions:
+      contents: write
+    
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          repository: Marques0x01/fiap-lanches-helm
+          ref: gh-pages  # Ou outra branch
+
+      - name: Configure Git
+        run: |
+          git config user.name "Jonathan"
+          git config user.email "jonathan.gomess1@gmail.com"
+  
+      - name: Install Helm
+        uses: azure/setup-helm@v3
+
+      - name: Package chart
+        run: helm package ./
+
+      - name: Send for Gitlab
+        run: curl --request POST --form 'chart=@fiap-lanches-0.3.0.tgz' --user ${{ secrets.GITLAB_USERNAME }}:${{ secrets.GITLAB_TOKEN }} https://gitlab.com/api/v4/projects/55019864/packages/helm/api/stable/charts
+  
+  terraform-eks-fiap-lanches:
+    runs-on: ubuntu-latest
+
+    steps:
+      
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          repository: Marques0x01/fiap_eks_cluster
+          ref: main 
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          cli_config_credentials_token: "${{ secrets.TF_TOKEN_API }}"
+
+      - name: Terraform Init
+        run: terraform init
+  
+      - name: Terraform Plan
+        run: terraform plan
+  
+      - name: Terraform Apply
+        run: terraform apply -auto-approve -input=false
+
+  Build-fiap-lambda:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          repository: Marques0x01/fiap_lambda_auth
+          ref: main  # Ou outra branch
+
+      - name: Install dependencies
+        run: |
+          cd app
+          npm install
+
+  Tests-fiap-lambda-auth:
+    needs: Build-fiap-lambda
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          repository: Marques0x01/fiap_lambda_auth
+          ref: main  # Ou outra branch
+
+      - name: Install dependencies
+        run: |
+          cd app
+          npm install
+
+      - name: Run tests
+        run: |
+          cd app
+          npm test
+
+  Publish-fiap-lambda-auth:
+    needs: Tests-fiap-lambda-auth
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          repository: Marques0x01/fiap_lambda_auth
+          ref: main 
+
+      - name: Install dependencies
+        run: |
+          cd app
+          npm install
+
+      - name: Terraform init
+        run: |
+          cd infra
+          terraform init
+
+      - name: Terraform plan
+        run: |
+          cd infra
+          terraform plan
+
+      - name: Terraform apply
+        run: |
+          cd infra
+          terraform apply -auto-approve
+
+  Publish-fiap-api-gateway:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          repository: Marques0x01/fiap_api_gateway
+          ref: main  # Ou outra branch
+
+      - name: Terraform init
+        run: |
+          cd infra
+          terraform init
+
+      - name: Terraform validate
+        run: |
+          cd infra
+          terraform validate
+
+      - name: Terraform plan
+        run: |
+          cd infra
+          terraform plan
+
+      - name: Terraform apply
+        run: |
+          cd infra
+          terraform apply -auto-approve
