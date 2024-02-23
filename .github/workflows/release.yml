@@ -41,8 +41,34 @@ jobs:
           cd app
           npm run test
   
+  create-ecr-fiap-lanches:
+    runs-on: ubuntu-latest
 
-  docker-fiap-lanches:
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          cli_config_credentials_token: "${{ secrets.TF_TOKEN_API }}"
+
+      - name: Terraform Init
+        run: |
+          cd infra-ecr
+          terraform init
+
+      - name: Terraform Plan
+        run: |
+          cd infra-ecr
+          terraform plan
+
+      - name: Terraform Apply
+        run: |
+          cd infra-ecr
+          terraform apply -auto-approve -input=false
+      
+  publish-image-fiap-lanches:
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -53,21 +79,29 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@f95db51fddba0c2d1ec667646a06c2ce06100226 # v3.0.0
-
-      - name: Login to Docker Hub
-        uses: docker/login-action@v3
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4 # More information on this action can be found below in the 'AWS Credentials' section
         with:
-          username: fiaplanches165
-          password: ${{secrets.DOCKER_HUB_TOKEN}}
+          aws-region: us-east-1
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+    
+      - name: Login to Amazon ECR Private
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
 
-      - name: Build and push
-        uses: docker/build-push-action@v5
-        with:
-          context: ./fiap-lanches-clean/app
-          push: true
-          tags: fiaplanches165/fiaplanches:latest
+      - name: Delete image
+        run: aws ecr batch-delete-image --repository-name fiap-lanches --image-ids imageTag=latest
+
+      - name: Build, tag, and push docker image to Amazon ECR
+        env:
+          REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          REPOSITORY: fiap-lanches
+        run: |
+          cd fiap-lanches-clean
+          cd app
+          docker build -t $REGISTRY/$REPOSITORY:latest .
+          docker push $REGISTRY/$REPOSITORY:latest
 
   helm-fiap-lanches:
     permissions:
@@ -83,20 +117,27 @@ jobs:
           repository: Marques0x01/fiap-lanches-helm
           ref: gh-pages  # Ou outra branch
 
-      - name: Configure Git
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4 # More information on this action can be found below in the 'AWS Credentials' section
+        with:
+          aws-region: us-east-1
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Delete helm
+        run: aws ecr batch-delete-image --repository-name fiap-lanches --image-ids imageTag=0.3.0   
+  
+      - name: Package and push helm chart to Amazon ECR
+        env:
+          REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         run: |
-          git config user.name "Jonathan"
-          git config user.email "jonathan.gomess1@gmail.com"
-  
-      - name: Install Helm
-        uses: azure/setup-helm@v3
+          helm package ./
+          helm push fiap-lanches-0.3.0.tgz oci://$REGISTRY
 
-      - name: Package chart
-        run: helm package ./
-
-      - name: Send for Gitlab
-        run: curl --request POST --form 'chart=@fiap-lanches-0.3.0.tgz' --user ${{ secrets.GITLAB_USERNAME }}:${{ secrets.GITLAB_TOKEN }} https://gitlab.com/api/v4/projects/55019864/packages/helm/api/stable/charts
-  
   terraform-eks-fiap-lanches:
     runs-on: ubuntu-latest
 
