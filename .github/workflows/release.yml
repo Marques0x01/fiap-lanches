@@ -43,7 +43,7 @@ jobs:
   
   create-ecr-fiap-lanches:
     runs-on: ubuntu-latest
-
+    needs: fiap-lanches-testes
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -70,6 +70,7 @@ jobs:
       
   publish-image-fiap-lanches:
     runs-on: ubuntu-latest
+    needs: create-ecr-fiap-lanches
     permissions:
       contents: read
       packages: write
@@ -104,6 +105,7 @@ jobs:
           docker push $REGISTRY/$REPOSITORY:latest
 
   helm-fiap-lanches:
+    needs: publish-image-fiap-lanches
     permissions:
       contents: write
     
@@ -139,6 +141,7 @@ jobs:
           helm push fiap-lanches-0.3.0.tgz oci://$REGISTRY
 
   terraform-eks-fiap-lanches:
+    needs: helm-fiap-lanches
     runs-on: ubuntu-latest
 
     steps:
