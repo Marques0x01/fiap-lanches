@@ -5,9 +5,12 @@ import {
 } from "../../midleware/validator/validate";
 import {
   createClientSchema,
+  createClientCognitoSchema,
   deleteClientSchema,
   getClientSchema,
   updateClientSchema,
+  confirmClientCognitoSchema,
+  loginClientCognitoSchema,
 } from "../../schemas/ClientSchemas";
 import { CreateClientController } from "../../../controllers/client/CreateClientController";
 import { DeleteClientController } from "../../../controllers/client/DeleteClientController";
@@ -18,10 +21,15 @@ import { Client } from "../../../configurations/DataSourceModelation/ClientEntit
 import { AppDataSource } from "../../../configurations/DataSource";
 import { TypeOrmDataSource } from "../../../repositories/dataSource/TypeOrmDataSource";
 import { LoggerImpl } from "../../../configurations/Logger/LoggerImpl";
+import { CreateClientCognitoController } from "../../../controllers/client/CreateClientCognitoController";
+import { AxiosClient } from "../../../configurations/http/AxiosClient";
+import { ConfirmClientCognitoController } from "../../../controllers/client/ConfirmClientCognitoController";
+import { LoginClientCognitoController } from "../../../controllers/client/LoginClientCognitoController";
 
 const clientRouter = Router();
 
 const logger = new LoggerImpl();
+const axios = new AxiosClient();
 const clientRepositorySource = AppDataSource.getRepository(Client);
 const typeOrmDataSource = new TypeOrmDataSource(clientRepositorySource);
 
@@ -30,6 +38,9 @@ const deleteClientController = new DeleteClientController(typeOrmDataSource, log
 const findClientByCpfController = new FindClientByCpfController(typeOrmDataSource);
 const updateClientController = new UpdateClientController(typeOrmDataSource);
 const listClientsController = new ListClientsController(typeOrmDataSource);
+const createCognitoController = new CreateClientCognitoController(logger, axios);
+const confirmCognitoController = new ConfirmClientCognitoController(logger, axios);
+const loginCognitoController = new LoginClientCognitoController(logger, axios);
 
 /**
  * @swagger
@@ -68,6 +79,121 @@ clientRouter.post(
   validateBody(createClientSchema),
   createClientController.handler
 );
+
+/**
+ * @swagger
+ * /api/v1/client/confirm:
+ *  post:
+ *      summary: confirm client Cognito
+ *      tags:
+ *       - Clients
+ *      description: confirm client based in body payload provided in cognito.
+ *      requestBody:
+ *          required: false
+ *          content:
+ *               application/json:
+ *                  schema:
+ *                      type: object
+ *                      properties:
+ *                          cpf:
+ *                              type: string
+ *                              description: Client's cpf.
+ *                          code:
+ *                              type: string
+ *                              description: Client's confirmation code.
+ *      responses:
+ *          '200':
+ *              description: Client saved with success
+ *          '400':
+ *              description: Bad payload given to API
+ *          '500':
+ *              description: Internal server error
+ */
+clientRouter.post(
+  "/confirm",
+  validateBody(confirmClientCognitoSchema),
+  confirmCognitoController.handler
+);
+
+/**
+ * @swagger
+ * /api/v1/client/login:
+ *  post:
+ *      summary: Login client Cognito
+ *      tags:
+ *       - Clients
+ *      description: Login client based in body payload provided in cognito.
+ *      requestBody:
+ *          required: false
+ *          content:
+ *               application/json:
+ *                  schema:
+ *                      type: object
+ *                      properties:
+ *                          cpf:
+ *                              type: string
+ *                              description: Client's cpf.
+ *                          password:
+ *                              type: string
+ *                              description: Client's password.
+ *      responses:
+ *          '200':
+ *              description: Client saved with success
+ *          '400':
+ *              description: Bad payload given to API
+ *          '500':
+ *              description: Internal server error
+ */
+clientRouter.post(
+  "/login",
+  validateBody(loginClientCognitoSchema),
+  loginCognitoController.handler
+);
+
+
+
+/**
+ * @swagger
+ * /api/v1/client/create:
+ *  post:
+ *      summary: Save client Cognito
+ *      tags:
+ *       - Clients
+ *      description: Save client based in body payload provided in cognito.
+ *      requestBody:
+ *          required: false
+ *          content:
+ *               application/json:
+ *                  schema:
+ *                      type: object
+ *                      properties:
+ *                          cpf:
+ *                              type: string
+ *                              description: Client's cpf.
+ *                          name:
+ *                              type: string
+ *                              description: Client's name.
+ *                          email:
+ *                              type: string
+ *                              description: Client's email.
+ *                          password:
+ *                              type: string
+ *                              description: Client's password.
+ *      responses:
+ *          '201':
+ *              description: Client saved with success
+ *          '400':
+ *              description: Bad payload given to API
+ *          '500':
+ *              description: Internal server error
+ */
+clientRouter.post(
+  "/create",
+  validateBody(createClientCognitoSchema),
+  createCognitoController.handler
+);
+
+
 /**
  * @swagger
  * /api/v1/client/{cpf}:
