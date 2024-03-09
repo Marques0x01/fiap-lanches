@@ -6,6 +6,7 @@ module "ecr" {
   source = "terraform-aws-modules/ecr/aws"
 
   repository_name = "fiap-lanches"
+  create_repository = true
 
   repository_lifecycle_policy = jsonencode({
     rules = [
