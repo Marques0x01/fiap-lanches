@@ -111,7 +111,6 @@ jobs:
             aws ecr batch-delete-image --repository-name fiap-lanches --image-ids imageTag=latest
           else
             echo "A imagem não foi encontrada na AWS ECR."
-            exit 1
           fi
 
       - name: Build, tag, and push docker image to Amazon ECR
