@@ -34,6 +34,7 @@ module "ecr" {
 
 
 resource "aws_ecr_repository_policy" "fiap-lanches" {
+  depends_on = [ module.ecr ]
   repository = "fiap-lanches"
   policy     = jsonencode({
     Version = "2012-10-17",
