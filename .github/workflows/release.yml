@@ -92,26 +92,26 @@ jobs:
         uses: aws-actions/amazon-ecr-login@v2
 
       - name: Delete image
-        # run: aws ecr batch-delete-image --repository-name fiap-lanches --image-ids imageTag=latest
-        run: |
-          repositories=$(aws ecr describe-repositories --output json | jq -r '.repositories[].repositoryName')
+        run: aws ecr batch-delete-image --repository-name fiap-lanches --image-ids imageTag=latest
+        # run: |
+        #   repositories=$(aws ecr describe-repositories --output json | jq -r '.repositories[].repositoryName')
 
-          found=false
-          for repo in $repositories; do
-          tags=$(aws ecr list-images --repository-name $repo --output json | jq -r '.imageIds[].imageTag')
-          for tag in $tags; do
-            if [ "$tag" == "fiap-lanches:latest" ]; then
-              found=true
-              break
-            fi
-            done
-          done
+        #   found=false
+        #   for repo in $repositories; do
+        #   tags=$(aws ecr list-images --repository-name $repo --output json | jq -r '.imageIds[].imageTag')
+        #   for tag in $tags; do
+        #     if [ "$tag" == "fiap-lanches:latest" ]; then
+        #       found=true
+        #       break
+        #     fi
+        #     done
+        #   done
 
-          if [ "$found" == true ]; then
-            aws ecr batch-delete-image --repository-name fiap-lanches --image-ids imageTag=latest
-          else
-            echo "A imagem não foi encontrada na AWS ECR."
-          fi
+        #   if [ "$found" == true ]; then
+        #     aws ecr batch-delete-image --repository-name fiap-lanches --image-ids imageTag=latest
+        #   else
+        #     echo "A imagem não foi encontrada na AWS ECR."
+        #   fi
 
       - name: Build, tag, and push docker image to Amazon ECR
         env:
