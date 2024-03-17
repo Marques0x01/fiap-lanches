@@ -1,11 +1,4 @@
 terraform {
-  backend "remote" {
-    organization = "fiap-lanches-ecr"
-
-    workspaces {
-      name = "fiap-lanches-workflow"
-    }
-  }
 
   required_providers {
     tfe = {

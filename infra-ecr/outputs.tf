@@ -1,4 +1,4 @@
 output "region" {
   description = "AWS region"
-  value       = "us-east-1"
+  value       = "sa-east-1"
 }
