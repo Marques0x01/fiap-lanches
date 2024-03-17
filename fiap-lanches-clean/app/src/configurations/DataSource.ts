@@ -10,7 +10,7 @@ require('dotenv').config();
 
 // export const AppDataSource = new DataSource({
 //   type: "postgres",
-//   host: "localhost",
+//   host: "fiap-lanches-postgres-db-instance.c3ayceu2o7gb.sa-east-1.rds.amazonaws.com",
 //   port: 5432,
 //   username: "postgres",
 //   password: "mysecretpassword",
@@ -20,6 +20,9 @@ require('dotenv').config();
 //   entities: [Promotion, Product, Order, Client, Employee],
 //   subscribers: [],
 //   migrations: [],
+//   ssl: {
+//       rejectUnauthorized: false
+//   }
 // });
 export const AppDataSource = new DataSource({
   type: "postgres",
@@ -33,6 +36,9 @@ export const AppDataSource = new DataSource({
   entities: [Promotion, Product, Order, Client, Employee],
   subscribers: [],
   migrations: [],
+  ssl: {
+      rejectUnauthorized: false
+  }
 });
 
 const logger = new LoggerImpl();
