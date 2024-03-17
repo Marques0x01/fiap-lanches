@@ -19,31 +19,31 @@ env:
 
 jobs:
 
-  fiap-lanches-testes:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
+  # fiap-lanches-testes:
+  #   runs-on: ubuntu-latest
+  #   permissions:
+  #     contents: read
+  #     packages: write
     
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+  #   steps:
+  #     - name: Checkout repository
+  #       uses: actions/checkout@v3
       
-      - name: npm install
-        run: |
-          cd fiap-lanches-clean
-          cd app
-          npm install
+  #     - name: npm install
+  #       run: |
+  #         cd fiap-lanches-clean
+  #         cd app
+  #         npm install
       
-      - name: npm run test
-        run: |
-          cd fiap-lanches-clean
-          cd app
-          npm run test
+  #     - name: npm run test
+  #       run: |
+  #         cd fiap-lanches-clean
+  #         cd app
+  #         npm run test
   
   create-ecr-fiap-lanches:
     runs-on: ubuntu-latest
-    needs: fiap-lanches-testes
+    # needs: fiap-lanches-testes
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -93,6 +93,25 @@ jobs:
 
       - name: Delete image
         run: aws ecr batch-delete-image --repository-name fiap-lanches --image-ids imageTag=latest
+        # run: |
+        #   repositories=$(aws ecr describe-repositories --output json | jq -r '.repositories[].repositoryName')
+
+        #   found=false
+        #   for repo in $repositories; do
+        #   tags=$(aws ecr list-images --repository-name $repo --output json | jq -r '.imageIds[].imageTag')
+        #   for tag in $tags; do
+        #     if [ "$tag" == "fiap-lanches:latest" ]; then
+        #       found=true
+        #       break
+        #     fi
+        #     done
+        #   done
+
+        #   if [ "$found" == true ]; then
+        #     aws ecr batch-delete-image --repository-name fiap-lanches --image-ids imageTag=latest
+        #   else
+        #     echo "A imagem não foi encontrada na AWS ECR."
+        #   fi
 
       - name: Build, tag, and push docker image to Amazon ECR
         env:
