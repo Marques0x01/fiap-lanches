@@ -8,7 +8,7 @@ import { IHttpClient } from "../../../configurations/http/IHttpClient";
 class CognitoService implements ICognitoService {
 
     private httpClient: IHttpClient;
-    private apiPath: string = "https://6r62u8s4z5.execute-api.us-east-1.amazonaws.com/prod/fiap-lanches";
+    private apiPath: string = "https://bm77rg08c4.execute-api.us-east-1.amazonaws.com/prod/fiap-lanches";
 
     constructor(httpClient: IHttpClient) {
         this.httpClient = httpClient;
