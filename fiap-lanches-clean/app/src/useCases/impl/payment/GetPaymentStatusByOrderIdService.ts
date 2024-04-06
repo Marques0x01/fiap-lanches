@@ -14,7 +14,7 @@ class GetPaymentStatusByOrderIdService implements IGetPaymentStatusByOrderIdServ
         });
 
         if (!order) {
-            throw new CustomError(`Order ${orderId} not found`, 404)
+            throw new CustomError(`Order ${orderId} was not found`, 404)
         }
 
         return {
