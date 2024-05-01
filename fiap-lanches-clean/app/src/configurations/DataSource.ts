@@ -10,7 +10,7 @@ require('dotenv').config();
 
 // export const AppDataSource = new DataSource({
 //   type: "postgres",
-//   host: "fiap-lanches-postgres-db-instance.c3ayceu2o7gb.sa-east-1.rds.amazonaws.com",
+//   host: "localhost",
 //   port: 5432,
 //   username: "postgres",
 //   password: "mysecretpassword",
@@ -19,18 +19,15 @@ require('dotenv').config();
 //   logging: true,
 //   entities: [Promotion, Product, Order, Client, Employee],
 //   subscribers: [],
-//   migrations: [],
-//   ssl: {
-//       rejectUnauthorized: false
-//   }
+//   migrations: []
 // });
 export const AppDataSource = new DataSource({
   type: "postgres",
-  host: process.env.POSTGRES_HOST,
+  host: "fiap-app.cfooekoy8k6i.us-east-1.rds.amazonaws.com",
   port: 5432,
-  username: process.env.POSTGRES_USER,
-  password: process.env.POSTGRES_PASSWORD,
-  database: process.env.POSTGRES_DB,
+  username: "postgres",
+  password: "mysecretpassword",
+  database: "postgres",
   synchronize: true,
   logging: true,
   entities: [Promotion, Product, Order, Client, Employee],

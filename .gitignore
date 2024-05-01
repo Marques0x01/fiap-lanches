@@ -144,3 +144,29 @@ dmypy.json
 # Cython debug symbols
 cython_debug/
 dashboard-adminuser.yaml
+
+
+
+# Arquivos Terraform
+*.tfstate
+*.tfstate.*
+*.tfplan
+terraform.tfstate
+terraform.tfstate.*
+
+# Arquivos de backup de texto
+*.tfvars
+
+# Logs e diretórios
+.terraform/
+terraform.tfstate.backup
+
+# Arquivos de configuração do IDE
+*.tfsettings
+*.tfignore
+
+# Arquivos de chave
+*.pem
+
+# Outros
+crash.log
