@@ -53,7 +53,6 @@ jobs:
         id: build-image
         run: |
           cd fiap-lanches-clean
-          cd app
           cd infra_ecs
           terraform apply --auto-aprove
 
