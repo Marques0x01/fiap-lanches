@@ -11,6 +11,13 @@ class AxiosClient implements IHttpClient {
         return axios.get(path);
     }
 
+    put(path: string, body?: any): any {
+        if(body){
+            return axios.put(path, body)
+        }
+        return axios.put(path);
+    }
+
 }
 
 export { AxiosClient };

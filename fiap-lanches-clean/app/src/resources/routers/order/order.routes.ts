@@ -11,6 +11,8 @@ import { TypeOrmDataSource } from "../../../repositories/dataSource/TypeOrmDataS
 import { Order } from "../../../configurations/DataSourceModelation/OrderEntityConfig";
 import { Product } from "../../../configurations/DataSourceModelation/ProductEntityConfig";
 import { LoggerImpl } from "../../../configurations/Logger/LoggerImpl";
+import { OrderHttp } from "../../../http/impl/OrderHttp";
+import { AxiosClient } from "../../../configurations/http/AxiosClient";
 
 const orderRouter = Router();
 
@@ -25,10 +27,15 @@ const typeOrmDataSourceOrder = new TypeOrmDataSource(orderDataSource);
 const productDataSource = AppDataSource.getRepository(Product);
 const typeOrmDataSourceProduct = new TypeOrmDataSource(productDataSource);
 
-const createOrderController = new CreateOrderController(typeOrmDataSourceOrder, typeOrmDataSourceClient, typeOrmDataSourceProduct, logger);
-const updateOrderStatusController = new UpdateOrderStatusController(typeOrmDataSourceOrder, logger);
-const getOrderByStatusController = new GetOrderByStatusController(typeOrmDataSourceOrder, logger);
-const getAllUnfinishedOrdersController = new GetAllUnfinishedOrdersController(typeOrmDataSourceOrder, logger);
+const orderHttp = new OrderHttp();
+const httpClient = new AxiosClient()
+
+const createOrderController = new CreateOrderController(typeOrmDataSourceOrder, typeOrmDataSourceClient, typeOrmDataSourceProduct, logger, orderHttp, httpClient);
+const updateOrderStatusController = new UpdateOrderStatusController(typeOrmDataSourceOrder, logger, orderHttp, httpClient);
+const getOrderByStatusController = new GetOrderByStatusController(typeOrmDataSourceOrder, logger, orderHttp, httpClient);
+const getAllUnfinishedOrdersController = new GetAllUnfinishedOrdersController(typeOrmDataSourceOrder, logger, orderHttp, httpClient);
+
+
 
 /**
  * @swagger
