@@ -54,7 +54,7 @@ jobs:
         run: |
           cd fiap-lanches-clean
           cd infra_ecs
-          terraform apply -auto-aprove
+          terraform apply --auto-approve
 
 # KUBERNETES
 # fiap-lanches-testes:
