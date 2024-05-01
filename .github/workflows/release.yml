@@ -22,22 +22,18 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      # - name: Login to Amazon ECR
-      #   id: login-ecr
-      #   uses: aws-actions/amazon-ecr-login@v1
-      #   with:
-      #     region: us-east-1
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
 
-      - name: Setup ECR
-        run: $( aws ecr get-login --no-include-email --region us-east-1)
-
-      - name: Build and push Docker image
-        id: build-image
+      - name: Build, tag, and push docker image to Amazon ECR
+        env:
+          REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          REPOSITORY: 891376972710.dkr.ecr.us-east-1.amazonaws.com/fiap-lanches-app
+          IMAGE_TAG: latest
         run: |
-          cd fiap-lanches-clean
-          cd app
-          docker build -t ${{ secrets.AWS_ECR_REGISTRY_URL }}/fiap-lanches-app:latest .
-          docker push ${{ secrets.AWS_ECR_REGISTRY_URL }}/fiap-lanches-app:latest
+          docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG .
+          docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
 
   create-ecs:
     needs: publish-image-ecr
