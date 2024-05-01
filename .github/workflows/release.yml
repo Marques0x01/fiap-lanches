@@ -34,7 +34,7 @@ jobs:
       - name: Build, tag, and push docker image to Amazon ECR
         env:
           REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          REPOSITORY: 891376972710.dkr.ecr.us-east-1.amazonaws.com/fiap-lanches-app
+          REPOSITORY: fiap-lanches-app
           IMAGE_TAG: latest
         run: |
           cd fiap-lanches-clean/app
