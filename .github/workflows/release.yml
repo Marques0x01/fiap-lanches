@@ -32,6 +32,7 @@ jobs:
           REPOSITORY: 891376972710.dkr.ecr.us-east-1.amazonaws.com/fiap-lanches-app
           IMAGE_TAG: latest
         run: |
+          cd fiap-lanches-clean/app
           docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG .
           docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
 
