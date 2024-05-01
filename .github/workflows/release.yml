@@ -24,6 +24,8 @@ jobs:
       - name: Login to Amazon ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
+        with:
+          region: us-east-1
 
       - name: Build and push Docker image
         id: build-image
@@ -34,6 +36,7 @@ jobs:
           docker push ${{ secrets.AWS_ECR_REGISTRY_URL }}/fiap-lanches-app:latest
 
   create-ecs:
+    needs: publish-image-ecr
     runs-on: ubuntu-latest
 
     steps:
