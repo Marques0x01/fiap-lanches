@@ -51,7 +51,8 @@ jobs:
 
       - name: Terraform init
         run: |
-          cd infra
+          cd fiap-lanches-clean
+          cd infra_ecs
           terraform init
       - name: Build and push Docker image
         id: build-image
