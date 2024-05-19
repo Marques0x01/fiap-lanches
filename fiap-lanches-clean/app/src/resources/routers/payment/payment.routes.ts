@@ -8,15 +8,21 @@ import { AppDataSource } from "../../../configurations/DataSource";
 import { Order } from "../../../configurations/DataSourceModelation/OrderEntityConfig";
 import { TypeOrmDataSource } from "../../../repositories/dataSource/TypeOrmDataSource";
 import { LoggerImpl } from "../../../configurations/Logger/LoggerImpl";
+import { GetOrderByIdService } from "../../../useCases/impl/order/GetOrderByIdService";
+import { PaymentHttp } from "../../../http/impl/PaymentHttp";
+import { AxiosClient } from "../../../configurations/http/AxiosClient";
 
 const paymentRouter = Router();
 
 const logger = new LoggerImpl();
 const orderDataSource = AppDataSource.getRepository(Order);
 const typeOrmDataSourceOrder = new TypeOrmDataSource(orderDataSource);
+const getOrderByIdService = new GetOrderByIdService();
+const paymentHttp = new PaymentHttp();
+const httpClient = new AxiosClient()
 
 const updatePaymentController = new UpdatePaymentController(typeOrmDataSourceOrder);
-const webHookPaymentController = new WebHookPaymentController(typeOrmDataSourceOrder, logger);
+const webHookPaymentController = new WebHookPaymentController(typeOrmDataSourceOrder, logger, getOrderByIdService, paymentHttp, httpClient);
 const getPaymentStatusByOrderIdController = new GetPaymentStatusByOrderIdController(typeOrmDataSourceOrder, logger);
 
 /**
