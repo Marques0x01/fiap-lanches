@@ -52,7 +52,7 @@ class WebHookPaymentController {
 
     webHookPaymentService.execute(request.body, 
       this.getOrderByIdService, orderRepository, this.paymentHttp, this.httpClient).then(resp => {
-      response.status(200).send({ "message": `Order payment processed'}`, "orderId": request.body.payment.order })
+      response.status(200).send({ "message": `Order payment processed'}`, "orderId": request.body.payment.order, "result": resp })
     }).catch(error => {
       this.logger.error(`Webhook payment error: ${error.message}`)
       response.status(500).send({ "error": error.message });
