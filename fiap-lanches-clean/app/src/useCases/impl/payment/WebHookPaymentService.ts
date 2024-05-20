@@ -48,8 +48,9 @@ class WebHookPaymentService implements IWebHookPaymentService {
       order_value: order.value.toString()
     };
     const paymentResponse = await paymentClient.PostPayment(paymentBody, httpClient);
+    console.log(paymentResponse)
     let paymentStatus: EOrderPayment = !paymentResponse.ok ? EOrderPayment.REFUSED : EOrderPayment.APPROVED;
-
+    console.log(paymentStatus)
     order.payment = paymentStatus;
     return orderRepository.saveOrUpdate(order);
   }
