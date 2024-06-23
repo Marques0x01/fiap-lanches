@@ -28,7 +28,7 @@ resource "aws_alb_target_group" "target_group" {
   name        = "fiap-target-group"
   port        = 3000
   protocol    = "HTTP"
-  vpc_id      = "vpc-0ac2e024019f887e4"
+  vpc_id      = "vpc-0b001884aa8134486"
   target_type = "ip"
 
   health_check {
