@@ -23,12 +23,12 @@ resource "aws_ecs_service" "main" {
 
   network_configuration {
     security_groups = ["sg-06a29c4a2101c50ad"]
-    subnets = ["subnet-0295ae777d536105f",
-"subnet-038880e229ee7a49e",
-"subnet-0682385eb548272df",
-"subnet-00d80bdf6d3140cfe",
-"subnet-05b5cd71f11116267",
-"subnet-0a6a73d8df81f27f4"]
+    subnets = ["subnet-0f2291c3259a0ba9f",
+      "subnet-0655b2d31da57124a",
+      "subnet-02e614ef4b46282e9",
+      "subnet-075642a504c9a2de8",
+      "subnet-0fa7ab58528ad0a16",
+    "subnet-015c09b75fc822ac9"]
     assign_public_ip = true
   }
 
