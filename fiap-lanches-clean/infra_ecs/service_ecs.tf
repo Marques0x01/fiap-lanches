@@ -22,7 +22,7 @@ resource "aws_ecs_service" "main" {
   launch_type     = "FARGATE"
 
   network_configuration {
-    security_groups = ["sg-06a29c4a2101c50ad"]
+    security_groups = ["sg-0814e9866258f4dcc"]
     subnets = ["subnet-0f2291c3259a0ba9f",
       "subnet-0655b2d31da57124a",
       "subnet-02e614ef4b46282e9",
