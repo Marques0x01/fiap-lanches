@@ -65,7 +65,7 @@ Simplificada
 
 [API Coleção](others/api_collection/fiapLanchesEndpointCollections.json) ou depois de rodar o projeto acesse o swagger: [Swagger](http://localhost:3000/api-docs/)
 
-## 📂 Estrutura do repositório
+## 📂 Estrutura do repositório 
 
 
 ```sh
