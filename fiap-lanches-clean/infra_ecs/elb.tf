@@ -2,13 +2,13 @@ resource "aws_alb" "load_balancer" {
   name               = "fiap-elb"
   internal           = false
   load_balancer_type = "application"
-  security_groups    = ["sg-0814e9866258f4dcc"]
-  subnets = ["subnet-0f2291c3259a0ba9f",
-    "subnet-0655b2d31da57124a",
-    "subnet-02e614ef4b46282e9",
-    "subnet-075642a504c9a2de8",
-    "subnet-0fa7ab58528ad0a16",
-  "subnet-015c09b75fc822ac9"]
+  security_groups    = ["sg-085b290724bbacb6b"]
+  subnets = ["subnet-06d00c0f6bc10ac5a",
+    "subnet-0b46ef3bfa2d46cb7",
+    "subnet-00856156f6a861a71",
+    "subnet-013d4706dc4716a99",
+    "subnet-07365ebf779a73a70",
+  "subnet-064177c5c249a2022"]
 
 }
 
@@ -28,7 +28,7 @@ resource "aws_alb_target_group" "target_group" {
   name        = "fiap-target-group"
   port        = 3000
   protocol    = "HTTP"
-  vpc_id      = "vpc-0b001884aa8134486"
+  vpc_id      = "vpc-027a42fb2debebec1"
   target_type = "ip"
 
   health_check {
