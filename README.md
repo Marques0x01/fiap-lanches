@@ -28,7 +28,9 @@
 ## 📖 Conteudo
 - [📖 Conteudo](#-conteudo)
 - [✨ Objetivos](#-objetivos)
+- [📜 Justificativa de porque usar o padrão Saga Orquestração (Orchestration)](#-justificativa-de-porque-usar-o-padrão-saga-orquestração-orchestration)
 - [📜 Arquitetura](#-arquitetura)
+- [📜 Relatório RIPD do sistema](#-relatório-ripd-do-sistema)
 - [📜 Explicação Arquitetura](#-explicação-arquitetura)
 - [🌐 Swagger - API Coleção](#-swagger---api-coleção)
 - [📂 Estrutura do repositório](#-estrutura-do-repositório)
@@ -48,6 +50,22 @@ Como solução, é necessário um sistema de gerenciamento de pedidos para garan
 
 Para resolver esse problema, este repositório foi criado com a intenção de ser um sistema de autosserviço e gerenciamento de fast food que oferece facilidade para os clientes fazerem e receberem seus pedidos. Ele também auxilia os funcionários no gerenciamento desses pedidos, permitindo o controle sobre estratégias de marketing e o gerenciamento de funcionários.
 
+## 📜 Justificativa de porque usar o padrão Saga Orquestração (Orchestration)
+
+A escolha pelo padrão Saga Orquestração (Orchestration) se justifica pela necessidade de um controle centralizado e mais previsível das transações distribuídas. Em sistemas complexos como o FiapLanches, onde várias operações independentes devem ser coordenadas, a orquestração facilita o monitoramento, depuração e controle de fluxos transacionais.
+
+**Vantagens da Orquestração:**
+
+  **- Centralização do Controle:** Um único serviço orquestrador gerencia todas as etapas da transação, facilitando a compreensão e manutenção do fluxo.
+  
+  **- Facilidade de Monitoramento e Depuração:** Com um ponto central de controle, é mais fácil rastrear problemas e entender o estado atual de uma transação.
+  
+  **- Flexibilidade:** Permite mudanças no fluxo de transação sem necessidade de alterar vários serviços.
+  
+  **- Consistência:** Garante que todas as etapas da transação sejam concluídas corretamente ou compensadas em caso de falha.
+
+Ao implementar o padrão Saga com Orquestração, o FiapLanches pode garantir um gerenciamento mais eficiente e robusto das transações distribuídas, melhorando a confiabilidade e a satisfação dos clientes.
+
 ## 📜 Arquitetura
 
 Completa
@@ -55,6 +73,10 @@ Completa
 
 Simplificada
 ![Fiap Lanches Arquitetura](others/architecture/simplified_architecture.png)
+
+
+## 📜 Relatório RIPD do sistema
+[Link com o relatório RIPD do sistema](https://docs.google.com/document/d/1B95qNDZeVxFm43rZ7FqVjK8sg-2wFoqW/edit?usp=sharing&ouid=113892299161381374843&rtpof=true&sd=true)
 
 
 ## 📜 Explicação Arquitetura
