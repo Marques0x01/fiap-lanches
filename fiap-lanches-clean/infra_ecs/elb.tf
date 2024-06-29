@@ -2,7 +2,7 @@ resource "aws_alb" "load_balancer" {
   name               = "fiap-elb"
   internal           = false
   load_balancer_type = "application"
-  security_groups    = ["g-0598204257a660641"]
+  security_groups    = ["sg-0598204257a660641"]
   subnets = ["subnet-09375875513e23f09",
 "subnet-00bdaebd1a079e09f",
 "subnet-08e1f0c4fad9d84a8"]
