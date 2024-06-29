@@ -13,8 +13,8 @@ spec:
         app: fiap-lanches-api-pod
     spec:
       containers:
-        - name: fiap-lanches-app
-          image: fiaplanches165/fiap-lanches-app:1.0.14
+        - name: fiap_app
+          image: fiaplanches165/fiap_app:1.0.14
           env:
             - name: POSTGRES_HOST
               valueFrom:
