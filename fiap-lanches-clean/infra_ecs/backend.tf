@@ -1,8 +1,8 @@
 terraform {
   backend "s3" {
-    bucket         = "tfstates-fiap"
+    bucket         = "tfstates-fiap-lanches"
     key            = "fiap_lanches_app/terraform.tfstate"
-    region         = "us-east-1"
+    region         = "us-east-2"
     
   }
 }
