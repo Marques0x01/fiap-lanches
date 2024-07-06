@@ -4,7 +4,7 @@ import { IOrderHttp } from "../interfaces/IOrderHttp";
 
 class OrderHttp implements IOrderHttp {
 
-    defaultPath = "https://prj22c46id.execute-api.us-east-2.amazonaws.com/prod/fiap-lanches"
+    defaultPath = "https://hjy9gisdug.execute-api.us-east-2.amazonaws.com/prod/fiap-lanches"
 
     async createOrder(order: any, httpClient: IHttpClient) {
         return await httpClient.post(this.defaultPath + "/order", order).then(resp => {
