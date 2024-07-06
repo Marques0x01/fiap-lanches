@@ -4,7 +4,7 @@ import { IPaymentHttp } from "../interfaces/IPaymentHttp";
 
 class PaymentHttp implements IPaymentHttp {
     
-    private defaultPath = "https://prj22c46id.execute-api.us-east-2.amazonaws.com/prod/fiap-lanches";
+    private defaultPath = "https://hjy9gisdug.execute-api.us-east-2.amazonaws.com/prod/fiap-lanches";
 
     async PostPayment(payment: IPaymentModel, httpClient: IHttpClient): Promise<any> {
         return await httpClient.post(this.defaultPath + '/payment', payment).then(resp => {
