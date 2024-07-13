@@ -1,7 +1,7 @@
 [
   {
     "name": "fiap-app",
-    "image": "767398154314.dkr.ecr.us-east-2.amazonaws.com/fiap_app:latest",
+    "image": "381492057057.dkr.ecr.us-east-2.amazonaws.com/fiap_app:latest",
     "cpu": 256,
     "memory": 512,
     "networkMode": "awsvpc",

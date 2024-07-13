@@ -23,7 +23,7 @@ require('dotenv').config();
 // });
 export const AppDataSource = new DataSource({
   type: "postgres",
-  host: "fiap-app.c16scs0k8olj.us-east-2.rds.amazonaws.com",
+  host: "fiap-app.cra40kywkxpa.us-east-2.rds.amazonaws.com",
   port: 5432,
   username: "postgres",
   password: "mysecretpassword",
